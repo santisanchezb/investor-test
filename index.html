@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test de Perfil de Inversor — Oratam</title>
+  <style>
+    :root{
+      --bg:#0f1221; --card:#151935; --muted:#aab1d8; --text:#e9ecff; --accent:#7aa2ff; --accent2:#a27aff; --ok:#67d78c; --warn:#ffd36e;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0c1022,#0b1228 25%,#0d1533 60%,#0a0f24);color:var(--text)}
+    .wrap{max-width:980px;margin:40px auto;padding:0 20px}
+    header{display:flex;gap:14px;align-items:center;margin-bottom:22px}
+    header h1{font-size:28px;margin:0}
+    .badge{font-size:12px;border:1px solid #2a2f55;padding:4px 8px;border-radius:999px;color:var(--muted)}
+    .card{background:linear-gradient(180deg,#121737,#101432);border:1px solid #243066;box-shadow:0 10px 30px rgba(0,0,0,.35);border-radius:18px;padding:22px;margin:16px 0}
+    h2{font-size:18px;margin:0 0 12px 0;color:#cfd6ff}
+    .q{padding:16px;border-radius:14px;border:1px solid #242b55;margin:12px 0;background:#14193a}
+    .q legend{font-weight:600;margin-bottom:10px}
+    .options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    label.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid #2a2f55;border-radius:12px;padding:10px 12px;cursor:pointer;background:#0f1432}
+    label.opt:hover{border-color:#3a4595}
+    input[type=radio]{accent-color:var(--accent)}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    @media (max-width:820px){.grid-2{grid-template-columns:1fr}}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+    button{background:linear-gradient(180deg,#6f8dff,#6a7bff);color:#0b0f21;border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+    button.secondary{background:#1a2046;border:1px solid #2b3577;color:#ced5ff}
+    .result{border-left:4px solid var(--accent);padding-left:14px}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid #314099;margin-right:6px;color:#cbd3ff;font-size:12px}
+    .muted{color:var(--muted)}
+    .good{color:var(--ok)}
+    .warn{color:var(--warn)}
+    .footer{font-size:12px;color:#9aa3d9;margin:24px 0}
+    .kicker{font-size:13px;color:#a3abe3;margin:0}
+    .title{font-size:22px;margin:6px 0 2px}
+    .rec-list{margin:10px 0 0 18px}
+    .rec-list li{margin:6px 0}
+    .separator{height:1px;background:#222a55;margin:20px 0}
+      .missing{border-color:#ff6b6b!important;background:#1b1430;box-shadow:0 0 0 2px rgba(255,107,107,.18) inset}
+    .warnbox{border-left:4px solid #ff6b6b}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4z" stroke="#7aa2ff" stroke-width="1.2"/></svg>
+      <h1>Test de Perfil de Inversor</h1>
+      <span class="badge">20 preguntas • 6 perfiles</span>
+    </header>
+
+    <p class="kicker">Responde con sinceridad. Al finalizar verás tu perfil <strong>matizado</strong>, recomendaciones y plataformas sugeridas. (No es asesoramiento financiero).</p>
+
+    <form id="quiz">
+      <!-- Bloque 1: Horizonte temporal (1-4) -->
+      <section class="card">
+        <h2>Bloque 1 · Horizonte temporal</h2>
+        <fieldset class="q">
+          <legend>1. ¿En cuánto tiempo esperas recuperar tu inversión?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q1" value="A"> A) Menos de 1 año</label>
+            <label class="opt"><input type="radio" name="q1" value="B"> B) 1–3 años</label>
+            <label class="opt"><input type="radio" name="q1" value="C"> C) 3–5 años</label>
+            <label class="opt"><input type="radio" name="q1" value="D"> D) Más de 5 años</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>2. Si tu inversión tarda en dar resultados, ¿qué harías?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q2" value="A"> A) Retiraría el dinero rápido</label>
+            <label class="opt"><input type="radio" name="q2" value="B"> B) Esperaría un tiempo, con incomodidad</label>
+            <label class="opt"><input type="radio" name="q2" value="C"> C) Puedo esperar varios años</label>
+            <label class="opt"><input type="radio" name="q2" value="D"> D) Prefiero largo plazo, incluso décadas</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>3. ¿Cuánto valoras la liquidez inmediata?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q3" value="A"> A) Muchísimo</label>
+            <label class="opt"><input type="radio" name="q3" value="B"> B) Bastante</label>
+            <label class="opt"><input type="radio" name="q3" value="C"> C) Poco</label>
+            <label class="opt"><input type="radio" name="q3" value="D"> D) Nada</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>4. ¿Qué prefieres?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q4" value="A"> A) Beneficios pequeños e inmediatos</label>
+            <label class="opt"><input type="radio" name="q4" value="B"> B) Beneficios estables a medio plazo</label>
+            <label class="opt"><input type="radio" name="q4" value="C"> C) Beneficios crecientes a medio-largo plazo</label>
+            <label class="opt"><input type="radio" name="q4" value="D"> D) Beneficios grandes a largo plazo</label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- Bloque 2: Capacidad financiera (5-8) -->
+      <section class="card">
+        <h2>Bloque 2 · Capacidad financiera</h2>
+        <fieldset class="q">
+          <legend>5. ¿Qué % de tus ingresos puedes invertir sin comprometer tu vida?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q5" value="A"> A) &lt; 5%</label>
+            <label class="opt"><input type="radio" name="q5" value="B"> B) 5–10%</label>
+            <label class="opt"><input type="radio" name="q5" value="C"> C) 10–20%</label>
+            <label class="opt"><input type="radio" name="q5" value="D"> D) &gt; 20%</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>6. Si pierdes un 20% de lo invertido, ¿qué pasa?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q6" value="A"> A) Afecta gravemente mi vida</label>
+            <label class="opt"><input type="radio" name="q6" value="B"> B) Problema importante</label>
+            <label class="opt"><input type="radio" name="q6" value="C"> C) Me incomoda pero lo asumo</label>
+            <label class="opt"><input type="radio" name="q6" value="D"> D) Poco impacto</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>7. ¿Tienes fondo de emergencia aparte de invertir?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q7" value="A"> A) Nada o casi nada</label>
+            <label class="opt"><input type="radio" name="q7" value="B"> B) 1–2 meses</label>
+            <label class="opt"><input type="radio" name="q7" value="C"> C) 3–6 meses</label>
+            <label class="opt"><input type="radio" name="q7" value="D"> D) &gt; 6 meses</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>8. Tu nivel de deudas actuales es…</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q8" value="A"> A) Muy alto</label>
+            <label class="opt"><input type="radio" name="q8" value="B"> B) Alto</label>
+            <label class="opt"><input type="radio" name="q8" value="C"> C) Moderado</label>
+            <label class="opt"><input type="radio" name="q8" value="D"> D) Bajo o inexistente</label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- Bloque 3: Tolerancia al riesgo (9-12) -->
+      <section class="card">
+        <h2>Bloque 3 · Tolerancia al riesgo</h2>
+        <fieldset class="q">
+          <legend>9. Si tu inversión cae un 10% en un mes, ¿qué haces?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q9" value="A"> A) Vendo inmediatamente</label>
+            <label class="opt"><input type="radio" name="q9" value="B"> B) Probablemente vendo</label>
+            <label class="opt"><input type="radio" name="q9" value="C"> C) Mantengo</label>
+            <label class="opt"><input type="radio" name="q9" value="D"> D) Aprovecho para invertir más</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>10. ¿Qué prefieres?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q10" value="A"> A) Seguridad, aunque gane poco</label>
+            <label class="opt"><input type="radio" name="q10" value="B"> B) Equilibrio seguridad/rentabilidad</label>
+            <label class="opt"><input type="radio" name="q10" value="C"> C) Más rentabilidad con más riesgo</label>
+            <label class="opt"><input type="radio" name="q10" value="D"> D) Máxima rentabilidad aunque pueda perder</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>11. Tu “umbral de dolor” en pérdidas es…</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q11" value="A"> A) No soporto perder</label>
+            <label class="opt"><input type="radio" name="q11" value="B"> B) Hasta un 10%</label>
+            <label class="opt"><input type="radio" name="q11" value="C"> C) Hasta un 30%</label>
+            <label class="opt"><input type="radio" name="q11" value="D"> D) Incluso &gt; 50%</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>12. ¿Aceptarías pérdidas a corto para más retorno a largo?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q12" value="A"> A) No</label>
+            <label class="opt"><input type="radio" name="q12" value="B"> B) Solo mínimas</label>
+            <label class="opt"><input type="radio" name="q12" value="C"> C) Sí, con condiciones</label>
+            <label class="opt"><input type="radio" name="q12" value="D"> D) Sin problema</label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- Bloque 4: Conocimientos (13-16) -->
+      <section class="card">
+        <h2>Bloque 4 · Conocimientos y experiencia</h2>
+        <fieldset class="q">
+          <legend>13. ¿Qué productos financieros conoces bien?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q13" value="A"> A) Solo cuentas y depósitos</label>
+            <label class="opt"><input type="radio" name="q13" value="B"> B) Fondos/planes de pensiones</label>
+            <label class="opt"><input type="radio" name="q13" value="C"> C) Acciones y ETFs</label>
+            <label class="opt"><input type="radio" name="q13" value="D"> D) Trading, startups, cripto, derivados</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>14. ¿Has invertido antes?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q14" value="A"> A) Nunca</label>
+            <label class="opt"><input type="radio" name="q14" value="B"> B) Muy poco</label>
+            <label class="opt"><input type="radio" name="q14" value="C"> C) Sí, de forma continua</label>
+            <label class="opt"><input type="radio" name="q14" value="D"> D) Amplia experiencia y diversificación</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>15. ¿Conoces diversificación, interés compuesto, etc.?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q15" value="A"> A) No</label>
+            <label class="opt"><input type="radio" name="q15" value="B"> B) Algo</label>
+            <label class="opt"><input type="radio" name="q15" value="C"> C) Bastante</label>
+            <label class="opt"><input type="radio" name="q15" value="D"> D) Perfectamente</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>16. ¿Lees información financiera habitualmente?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q16" value="A"> A) Nunca</label>
+            <label class="opt"><input type="radio" name="q16" value="B"> B) A veces</label>
+            <label class="opt"><input type="radio" name="q16" value="C"> C) Regularmente</label>
+            <label class="opt"><input type="radio" name="q16" value="D"> D) A diario</label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- Bloque 5: Objetivos (17-20) -->
+      <section class="card">
+        <h2>Bloque 5 · Objetivos</h2>
+        <fieldset class="q">
+          <legend>17. ¿Qué buscas con tus inversiones?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q17" value="A"> A) Preservar capital</label>
+            <label class="opt"><input type="radio" name="q17" value="B"> B) Ingresos estables</label>
+            <label class="opt"><input type="radio" name="q17" value="C"> C) Crecimiento sostenido</label>
+            <label class="opt"><input type="radio" name="q17" value="D"> D) Maximizar ganancias</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>18. ¿Qué valoras más?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q18" value="A"> A) Estabilidad</label>
+            <label class="opt"><input type="radio" name="q18" value="B"> B) Flexibilidad</label>
+            <label class="opt"><input type="radio" name="q18" value="C"> C) Crecimiento</label>
+            <label class="opt"><input type="radio" name="q18" value="D"> D) Rentabilidad máxima</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>19. ¿Tus objetivos están ligados a…?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q19" value="A"> A) Mantener ahorros</label>
+            <label class="opt"><input type="radio" name="q19" value="B"> B) Compras grandes</label>
+            <label class="opt"><input type="radio" name="q19" value="C"> C) Jubilación/proyectos familiares</label>
+            <label class="opt"><input type="radio" name="q19" value="D"> D) Independencia financiera</label>
+          </div>
+        </fieldset>
+        <fieldset class="q">
+          <legend>20. ¿Qué es para ti una inversión exitosa?</legend>
+          <div class="options">
+            <label class="opt"><input type="radio" name="q20" value="A"> A) No perder dinero</label>
+            <label class="opt"><input type="radio" name="q20" value="B"> B) Ganar algo más que el banco</label>
+            <label class="opt"><input type="radio" name="q20" value="C"> C) Superar inflación y crecer</label>
+            <label class="opt"><input type="radio" name="q20" value="D"> D) Multiplicar capital</label>
+          </div>
+        </fieldset>
+      </section>
+
+      <div class="actions">
+        <button type="button" id="calc">Calcular perfil</button>
+        <button type="button" id="copyjson" class="secondary">Copiar resultados</button>
+        <button type="button" id="copylink" class="secondary">Copiar enlace</button>
+        <button type="reset" class="secondary">Borrar respuestas</button>
+        <button type="button" id="print" class="secondary">Imprimir / PDF</button>
+      </div>
+    </form>
+    <section id="warn" class="card warnbox" style="display:none">
+      <h2>Faltan respuestas</h2>
+      <p class="muted">Te faltan por responder las preguntas: <span id="miss-list">—</span>. Marca todas las respuestas para poder calcular tu perfil.</p>
+    </section>
+
+    <section id="out" class="card" style="display:none">
+      <h2>Resultado</h2>
+      <div class="result">
+        <p class="kicker">Resumen</p>
+        <p class="title" id="profile">—</p>
+        <p class="muted" id="scores">—</p>
+        <div class="separator"></div>
+        <div id="narrative"></div>
+        <div class="separator"></div>
+        <div id="recs"></div>
+        <p class="footer">⚠️ Este contenido es informativo y no constituye asesoramiento financiero. Considera tu situación personal y normativa fiscal.</p>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" style="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1a2046;border:1px solid #2b3577;color:#cfd6ff;padding:10px 14px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.35);display:none;z-index:9999"></div>
+
+  <script>
+    const mapPoints = {A:1,B:2,C:3,D:4};
+    const riskQs = [1,2,3,4,5,6,7,8,9,10,11,12,17,18,19,20];
+    const knowQs = [13,14,15,16];
+
+    function getVal(name){
+      const el = document.querySelector(`input[name=${name}]:checked`);
+      return el? el.value : null;
+    }
+
+    function ensureAll(){
+      const missing = [];
+      for(let i=1;i<=20;i++) if(!getVal('q'+i)) missing.push(i);
+      return missing;
+    }
+
+    function levelRisk(score){
+      if(score <= 32) return 'Conservador';
+      if(score <= 48) return 'Moderado';
+      return 'Agresivo';
+    }
+    function levelKnowledge(score){
+      // 6 perfiles: Inexperto (<=8) vs Experto (>8) — agrupamos medio+alto en "Experto/Informado" según el perfil
+      return (score <= 8) ? 'Inexperto' : 'Experto';
+    }
+
+    function clearHighlights(){
+      document.querySelectorAll('fieldset.q').forEach(fs=>fs.classList.remove('missing'));
+    }
+    function showMissing(miss){
+      // highlight unanswered questions
+      clearHighlights();
+      miss.forEach(n=>{
+        const anyInput = document.querySelector(`input[name=q${n}]`);
+        if(anyInput){ const fs = anyInput.closest('fieldset'); if(fs) fs.classList.add('missing'); }
+      });
+      // render warn box
+      const warn = document.getElementById('warn');
+      document.getElementById('miss-list').textContent = miss.join(', ');
+      warn.style.display = 'block';
+      // scroll to first missing
+      const first = document.querySelector(`input[name=q${miss[0]}]`);
+      if(first){ first.scrollIntoView({behavior:'smooth', block:'center'}); }
+    }
+
+    const profiles = {
+      'Conservador|Inexperto': {
+        title:'Conservador inexperto',
+        narrative:`Buscas máxima seguridad, priorizas liquidez y aún no dominas el lenguaje de inversión. Tu foco debe ser la protección del capital y el aprendizaje básico.`,
+        recs:[
+          'Productos: depósitos, cuentas remuneradas, fondos garantizados simples',
+          'Plataformas: banco tradicional, MyInvestor',
+          'Autonomía: baja → busca acompañamiento profesional',
+        ]
+      },
+      'Conservador|Experto': {
+        title:'Conservador informado',
+        narrative:`Conoces las herramientas financieras, pero eliges estrategias de baja volatilidad. Tu ventaja es la disciplina y el control del riesgo.`,
+        recs:[
+          'Productos: renta fija diversificada, ETFs defensivos, carteras objetivo',
+          'Plataformas: Indexa Capital, MyInvestor, Trade Republic (bonos/ETFs defensivos)',
+          'Autonomía: media-alta → puedes gestionar por tu cuenta',
+        ]
+      },
+      'Moderado|Inexperto': {
+        title:'Moderado principiante',
+        narrative:`Buscas equilibrio entre seguridad y crecimiento, aunque tu experiencia aún es limitada. Ideal para aprender con estructuras sencillas y diversificadas.`,
+        recs:[
+          'Productos: carteras mixtas (50% renta fija / 50% variable), fondos indexados globales, roboadvisors',
+          'Plataformas: Indexa Capital, Revolut, Finect',
+          'Autonomía: media-baja → recomendable acompañamiento inicial',
+        ]
+      },
+      'Moderado|Experto': {
+        title:'Moderado experimentado',
+        narrative:`Equilibras rentabilidad y seguridad con criterio. Entiendes diversificación y puedes ajustar pesos según ciclos de mercado.`,
+        recs:[
+          'Productos: ETFs globales, acciones blue chip, mezcla renta fija+variable, ETFs sectoriales tácticos',
+          'Plataformas: DeGiro, Trade Republic, MyInvestor',
+          'Autonomía: alta → gestión propia con revisiones periódicas',
+        ]
+      },
+      'Agresivo|Inexperto': {
+        title:'Agresivo inexperto',
+        narrative:`Buscas máximas rentabilidades sin base técnica suficiente. Riesgo elevado de decisiones impulsivas. Empieza con pequeñas cantidades y reglas claras de riesgo.`,
+        recs:[
+          'Productos: ETFs globales como escalón de entrada; evita derivados; cripto/acciones con ticket pequeño',
+          'Plataformas: Revolut, Bit2Me (con cautela)',
+          'Autonomía: baja → asesoría/mentor muy recomendable',
+        ]
+      },
+      'Agresivo|Experto': {
+        title:'Agresivo experto',
+        narrative:`Tienes alta tolerancia a la volatilidad y dominio técnico. Puedes explorar estrategias de alto riesgo con control férreo del drawdown.`,
+        recs:[
+          'Productos: acciones de crecimiento, startups/VC, trading avanzado, (opcional) cripto y derivados',
+          'Plataformas: DeGiro, Binance Pro, Crowdcube, brokers especializados',
+          'Autonomía: muy alta → mantén disciplina y gestión de riesgo',
+        ]
+      },
+    };
+
+    function buildList(items){
+      return '<ul class="rec-list">' + items.map(i=>`<li>• ${i}</li>`).join('') + '</ul>'
+    }
+
+    function calc(){
+      let riskScore = 0, knowScore = 0, total=0;
+      for(const i of riskQs){ total += mapPoints[getVal('q'+i)]; riskScore += mapPoints[getVal('q'+i)]; }
+      for(const i of knowQs){ total += mapPoints[getVal('q'+i)]; knowScore += mapPoints[getVal('q'+i)]; }
+
+      const rLev = levelRisk(riskScore);
+      const kLev = levelKnowledge(knowScore);
+      const key = `${rLev}|${kLev}`;
+      const prof = profiles[key];
+
+      // Render
+      document.getElementById('out').style.display = 'block';
+      document.getElementById('profile').textContent = `${prof.title}`;
+      document.getElementById('scores').innerHTML = `Riesgo: <span class="pill">${riskScore} / 64 → ${rLev}</span> Conocimiento: <span class="pill">${knowScore} / 16 → ${kLev}</span>`;
+      document.getElementById('narrative').innerHTML = `<p>${prof.narrative}</p>`;
+      document.getElementById('recs').innerHTML = `<h3 style="margin:0 0 8px">Recomendaciones</h3>${buildList(prof.recs)}<p class="muted" style="margin-top:10px">Consejo: automatiza aportaciones mensuales y revisa tu cartera cada 6–12 meses.</p>`;
+      window.scrollTo({top:document.getElementById('out').offsetTop-12,behavior:'smooth'});
+    }
+
+  function toast(msg){
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.style.display='block';
+    setTimeout(()=>{el.style.display='none'}, 2200);
+  }
+
+  function computeScores(){
+    // Reutiliza tu lógica existente
+    let riskScore = 0, knowScore = 0;
+    for(const i of [1,2,3,4,5,6,7,8,9,10,11,12,17,18,19,20]){
+      riskScore += {A:1,B:2,C:3,D:4}[document.querySelector(`input[name=q${i}]:checked`).value];
+    }
+    for(const i of [13,14,15,16]){
+      knowScore += {A:1,B:2,C:3,D:4}[document.querySelector(`input[name=q${i}]:checked`).value];
+    }
+    return {riskScore, knowScore};
+  }
+
+  function buildPayload(){
+    const miss = (function(){
+      const arr=[]; for(let i=1;i<=20;i++){ if(!document.querySelector(`input[name=q${i}]:checked`)) arr.push(i); }
+      return arr;
+    })();
+    if(miss.length){ 
+      // Reusa tu UI de faltantes:
+      if (window.showMissing) showMissing(miss);
+      else alert('Te faltan preguntas por responder: ' + miss.join(', '));
+      return null; 
+    }
+
+    const {riskScore, knowScore} = computeScores();
+    const rLev = (riskScore<=32)?'Conservador':(riskScore<=48)?'Moderado':'Agresivo';
+    const kLev = (knowScore<=8)?'Inexperto':'Experto'; // agrupación simple útil para handoff
+    return {
+      v:'INVTESTv1',
+      timestamp:new Date().toISOString(),
+      riskScore, knowScore, riskLevel:rLev, knowledgeLevel:kLev
+    };
+  }
+
+  // Copiar token de resultados (para pegar en el GPT)
+  document.getElementById('copyjson').addEventListener('click', async ()=>{
+    const payload = buildPayload(); if(!payload) return;
+    const text = payload.v + ':' + JSON.stringify(payload);
+    try { await navigator.clipboard.writeText(text); toast('Resultados copiados'); }
+    catch(e){ toast('No se pudo copiar'); console.error(e); }
+  });
+
+  // Copiar enlace con hash #r= & #k= (para vista rápida)
+  document.getElementById('copylink').addEventListener('click', async ()=>{
+    const payload = buildPayload(); if(!payload) return;
+    const url = `${location.origin}${location.pathname}#r=${payload.riskScore}&k=${payload.knowScore}`;
+    try { await navigator.clipboard.writeText(url); toast('Enlace copiado'); }
+    catch(e){ toast('No se pudo copiar enlace'); console.error(e); }
+  });
+
+  // Si te comparten un enlace con #r y #k, muestra resultado directo
+  (function readHash(){
+    const m = location.hash.match(/#r=(\d+)&k=(\d+)/);
+    if(!m) return;
+    const riskScore = parseInt(m[1],10), knowScore = parseInt(m[2],10);
+    const rLev = (riskScore<=32)?'Conservador':(riskScore<=48)?'Moderado':'Agresivo';
+    const kLev = (knowScore<=8)?'Inexperto':'Experto';
+    const key = `${rLev}|${kLev}`;
+    // Reusa tu objeto 'profiles' existente:
+    const prof = (window.profiles && profiles[key]) ? profiles[key] : null;
+    if(!prof) return;
+
+    document.getElementById('out').style.display = 'block';
+    document.getElementById('warn').style.display = 'none';
+    document.getElementById('profile').textContent = prof.title;
+    document.getElementById('scores').innerHTML = `Riesgo: <span class="pill">${riskScore} / 64 → ${rLev}</span> Conocimiento: <span class="pill">${knowScore} / 16 → ${kLev}</span>`;
+    document.getElementById('narrative').innerHTML = `<p>${prof.narrative}</p>`;
+    document.getElementById('recs').innerHTML = `<h3 style="margin:0 0 8px">Recomendaciones</h3>${(function(items){return '<ul class="rec-list">'+items.map(i=>'<li>• '+i+'</li>').join('')+'</ul>'})(prof.recs)}<p class="muted" style="margin-top:10px">(Vista rápida a partir del enlace compartido)</p>`;
+  })();
+
+    document.getElementById('calc').addEventListener('click', ()=>{
+      const miss = ensureAll();
+      if(miss.length){
+        showMissing(miss);
+        return;
+      }
+      // hide warn if previously shown and proceed
+      document.getElementById('warn').style.display = 'none';
+      clearHighlights();
+      calc();
+    });
+    document.getElementById('print').addEventListener('click', ()=>window.print());
+  </script>
+</body>
+</html>
