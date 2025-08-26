@@ -277,6 +277,8 @@
 
       <div class="actions">
         <button type="button" id="calc">Calcular perfil</button>
+        <button type="button" id="copyjson" class="secondary">Copiar resultados</button>
+        <button type="button" id="copylink" class="secondary">Copiar enlace</button>
         <button type="reset" class="secondary">Borrar respuestas</button>
         <button type="button" id="print" class="secondary">Imprimir / PDF</button>
       </div>
@@ -323,8 +325,10 @@
       return 'Agresivo';
     }
     function levelKnowledge(score){
-      // 6 perfiles: Inexperto (<=8) vs Experto (>8) — agrupamos medio+alto en "Experto/Informado" según el perfil
-      return (score <= 8) ? 'Inexperto' : 'Experto';
+      // 9 perfiles: Inexperto (<=8) Informado (<=12) — desagrupamos medio+alto de "Experto/Informado" a Informado
+      if(score <= 8) return 'Inexperto';
+      if(score <= 12) return 'Informado';
+      return 'Experto';
     }
 
     function clearHighlights(){
@@ -356,6 +360,15 @@
           'Autonomía: baja → busca acompañamiento profesional',
         ]
       },
+      'Conservador|Informado': {
+        title:'Conservador informado',
+        narrative:`Conoces productos financieros básicos y valoras la estabilidad. Prefieres baja volatilidad y puedes gestionar productos sencillos con reglas claras.`,
+        recs:[
+          'Productos: renta fija corto/medio plazo, fondos indexados defensivos, carteras objetivo conservadoras',
+          'Plataformas: Indexa Capital, MyInvestor, Trade Republic (bonos/ETFs defensivos)',
+          'Autonomía: media → puedes invertir solo en universos sencillos',
+        ]
+      },
       'Conservador|Experto': {
         title:'Conservador experto',
         narrative:`Conoces las herramientas financieras, pero eliges estrategias de baja volatilidad. Tu ventaja es la disciplina y el control del riesgo.`,
@@ -372,6 +385,15 @@
           'Productos: carteras mixtas (50% renta fija / 50% variable), fondos indexados globales, roboadvisors',
           'Plataformas: Indexa Capital, Revolut, Finect',
           'Autonomía: media-baja → recomendable acompañamiento inicial',
+        ]
+      },
+      'Moderado|Informado': {
+        title:'Moderado informado',
+        narrative:`Buen equilibrio entre riesgo y conocimiento. Entiendes la diversificación y las aportaciones periódicas; priorizas crecimiento sostenido con control del riesgo.`,
+        recs:[
+          'Productos: ETFs globales (ACWI/World), fondos indexados, acciones blue chip + renta fija de soporte',
+          'Plataformas: DeGiro, Trade Republic, MyInvestor',
+          'Autonomía: media-alta → autogestión con revisiones semestrales/anuales',
         ]
       },
       'Moderado|Experto': {
@@ -392,6 +414,15 @@
           'Autonomía: baja → asesoría/mentor muy recomendable',
         ]
       },
+      'Agresivo|Informado': {
+        title:'Agresivo informado',
+        narrative:`Buscas alta rentabilidad y toleras la volatilidad; ya tienes cierta experiencia. Evita sobreconcentración y define reglas de entrada/salida.`,
+        recs:[
+          'Productos: acciones de crecimiento, ETFs/fondos sectoriales, pequeña exposición a cripto (≤10%)',
+          'Plataformas: DeGiro, Binance, Trade Republic',
+          'Autonomía: media-alta → establece límites de tamaño por activo y stops mentales',
+        ]
+      },
       'Agresivo|Experto': {
         title:'Agresivo experto',
         narrative:`Tienes alta tolerancia a la volatilidad y dominio técnico. Puedes explorar estrategias de alto riesgo con control férreo del drawdown.`,
@@ -408,27 +439,9 @@
     }
 
     function calc(){
-  let riskScore = 0, knowScore = 0;
-  for(const i of riskQs){ riskScore += mapPoints[getVal('q'+i)]; }
-  for(const i of knowQs){ knowScore += mapPoints[getVal('q'+i)]; }
-
-  const rLev = levelRisk(riskScore);
-  const kLev = levelKnowledge(knowScore);
-  const key = `${rLev}|${kLev}`;
-  const prof = profiles[key];
-
-  document.getElementById('out').style.display = 'block';
-  document.getElementById('warn').style.display = 'none';
-  clearHighlights();
-  document.getElementById('profile').textContent = `${prof.title}`;
-  document.getElementById('scores').innerHTML = `Riesgo: <span class=\"pill\">${riskScore} / 64 → ${rLev}</span> Conocimiento: <span class=\"pill\">${knowScore} / 16 → ${kLev}</span>`;
-  document.getElementById('narrative').innerHTML = `<p>${prof.narrative}</p>`;
-  document.getElementById('recs').innerHTML = `<h3 style=\"margin:0 0 8px\">Recomendaciones</h3>${buildList(prof.recs)}<p class=\"muted\" style=\"margin-top:10px\">Consejo: automatiza aportaciones mensuales y revisa tu cartera cada 6–12 meses.</p>`;
-  window.scrollTo({top:document.getElementById('out').offsetTop-12,behavior:'smooth'});
-}
-      let riskScore = 0, knowScore = 0, total=0;
-      for(const i of riskQs){ total += mapPoints[getVal('q'+i)]; riskScore += mapPoints[getVal('q'+i)]; }
-      for(const i of knowQs){ total += mapPoints[getVal('q'+i)]; knowScore += mapPoints[getVal('q'+i)]; }
+      let riskScore = 0, knowScore = 0;
+      for(const i of riskQs){ riskScore += mapPoints[getVal('q'+i)]; }
+      for(const i of knowQs){ knowScore += mapPoints[getVal('q'+i)]; }
 
       const rLev = levelRisk(riskScore);
       const kLev = levelKnowledge(knowScore);
@@ -437,13 +450,89 @@
 
       // Render
       document.getElementById('out').style.display = 'block';
+      document.getElementById('warn').style.display = 'none';
+      clearHighlights();
       document.getElementById('profile').textContent = `${prof.title}`;
-      document.getElementById('scores').innerHTML = `Riesgo: <span class="pill">${riskScore} / 64 → ${rLev}</span> Conocimiento: <span class="pill">${knowScore} / 16 → ${kLev}</span>`;
+      document.getElementById('scores').innerHTML = `Riesgo: <span class=\"pill\">${riskScore} / 64 → ${rLev}</span> Conocimiento: <span class=\"pill\">${knowScore} / 16 → ${kLev}</span>`;
       document.getElementById('narrative').innerHTML = `<p>${prof.narrative}</p>`;
-      document.getElementById('recs').innerHTML = `<h3 style="margin:0 0 8px">Recomendaciones</h3>${buildList(prof.recs)}<p class="muted" style="margin-top:10px">Consejo: automatiza aportaciones mensuales y revisa tu cartera cada 6–12 meses.</p>`;
+      document.getElementById('recs').innerHTML = `<h3 style=\"margin:0 0 8px\">Recomendaciones</h3>${buildList(prof.recs)}<p class=\"muted\" style=\"margin-top:10px\">Consejo: automatiza aportaciones mensuales y revisa tu cartera cada 6–12 meses.</p>`;
       window.scrollTo({top:document.getElementById('out').offsetTop-12,behavior:'smooth'});
     }
+    function toast(msg){
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.style.display='block';
+      setTimeout(()=>{el.style.display='none'}, 2200);
+    }
 
+    function computeScores(){
+      // Reutiliza tu lógica existente
+      let riskScore = 0, knowScore = 0;
+      for(const i of [1,2,3,4,5,6,7,8,9,10,11,12,17,18,19,20]){
+        riskScore += {A:1,B:2,C:3,D:4}[document.querySelector(`input[name=q${i}]:checked`).value]; 
+      }
+      for(const i of [13,14,15,16]){
+        knowScore += {A:1,B:2,C:3,D:4}[document.querySelector(`input[name=q${i}]:checked`).value];
+      }
+      return {riskScore, knowScore};
+    }
+
+    function buildPayload(){
+      const miss = (function(){
+        const arr=[]; for(let i=1;i<=20;i++){ if(!document.querySelector(`input[name=q${i}]:checked`)) arr.push(i); }
+        return arr;
+      })();
+      if(miss.length){ 
+        // Reusa tu UI de faltantes:
+        if (window.showMissing) showMissing(miss);
+        else alert('Te faltan preguntas por responder: ' + miss.join(', '));
+        return null; 
+      }
+
+      const {riskScore, knowScore} = computeScores();
+      const rLev = (riskScore<=32)?'Conservador':(riskScore<=48)?'Moderado':'Agresivo';
+      const kLev = (knowScore<=8)?'Inexperto':(knowScore<=12)?'Informado':'Experto'; // deshacemos la agrupación simple útil para handoff
+      return {
+        v:'INVTESTv1',
+        timestamp:new Date().toISOString(),
+        riskScore, knowScore, riskLevel:rLev, knowledgeLevel:kLev
+      };
+    }
+// Copiar token de resultados (para pegar en el GPT)
+  document.getElementById('copyjson').addEventListener('click', async ()=>{
+    const payload = buildPayload(); if(!payload) return;
+    const text = payload.v + ':' + JSON.stringify(payload);
+    try { await navigator.clipboard.writeText(text); toast('Resultados copiados'); }
+    catch(e){ toast('No se pudo copiar'); console.error(e); }
+  });
+
+  // Copiar enlace con hash #r= & #k= (para vista rápida)
+  document.getElementById('copylink').addEventListener('click', async ()=>{
+    const payload = buildPayload(); if(!payload) return;
+    const url = `${location.origin}${location.pathname}#r=${payload.riskScore}&k=${payload.knowScore}`;
+    try { await navigator.clipboard.writeText(url); toast('Enlace copiado'); }
+    catch(e){ toast('No se pudo copiar enlace'); console.error(e); }
+  });
+
+  // Si te comparten un enlace con #r y #k, muestra resultado directo
+  (function readHash(){
+    const m = location.hash.match(/#r=(\d+)&k=(\d+)/);
+    if(!m) return;
+    const riskScore = parseInt(m[1],10), knowScore = parseInt(m[2],10);
+    const rLev = (riskScore<=32)?'Conservador':(riskScore<=48)?'Moderado':'Agresivo';
+    const kLev = (knowScore<=8)?'Inexperto':(knowScore<=8)?'Informado':'Experto';
+    const key = `${rLev}|${kLev}`;
+    // Reusa tu objeto 'profiles' existente:
+    const prof = (window.profiles && profiles[key]) ? profiles[key] : null;
+    if(!prof) return;
+
+    document.getElementById('out').style.display = 'block';
+    document.getElementById('warn').style.display = 'none';
+    document.getElementById('profile').textContent = prof.title;
+    document.getElementById('scores').innerHTML = `Riesgo: <span class="pill">${riskScore} / 64 → ${rLev}</span> Conocimiento: <span class="pill">${knowScore} / 16 → ${kLev}</span>`;
+    document.getElementById('narrative').innerHTML = `<p>${prof.narrative}</p>`;
+    document.getElementById('recs').innerHTML = `<h3 style="margin:0 0 8px">Recomendaciones</h3>${(function(items){return '<ul class="rec-list">'+items.map(i=>'<li>• '+i+'</li>').join('')+'</ul>'})(prof.recs)}<p class="muted" style="margin-top:10px">(Vista rápida a partir del enlace compartido)</p>`;
+  })();
+    
     document.getElementById('calc').addEventListener('click', ()=>{
       const miss = ensureAll();
       if(miss.length){
